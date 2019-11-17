@@ -154,7 +154,6 @@ class Cursor(common.DBAPICursor):
                                                        principal=KerberosPrincipal,
                                                        service=KerberosRemoteServiceName,
                                                        hostname_override=hostname_override)
-
         else:
             if password is not None and 'auth' in requests_kwargs:
                 raise ValueError("Cannot use both password and requests_kwargs authentication")
@@ -249,6 +248,7 @@ class Cursor(common.DBAPICursor):
             return
 
         response = self._requests_session.delete(self._nextUri, **self._requests_kwargs)
+        response = self._requests_session.delete(self._nextUri, )
         if response.status_code != requests.codes.no_content:
             fmt = "Unexpected status code after cancel {}\n{}"
             raise OperationalError(fmt.format(response.status_code, response.content))
@@ -270,7 +270,7 @@ class Cursor(common.DBAPICursor):
         if self._nextUri is None:
             assert self._state == self._STATE_FINISHED, "Should be finished if nextUri is None"
             return None
-        response = self._requests_session.get(self._nextUri, **self._requests_kwargs)
+        response = self._requests_session.get(self._nextUri, **self._requests_kwargs,)
         self._process_response(response)
         return response.json()
 
